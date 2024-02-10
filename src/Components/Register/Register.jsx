@@ -1,24 +1,25 @@
 import { NavLink } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import auth from "../../firebase/firebase.config";
+import { useContext } from "react";
+import { AuthContext } from "../AuthProvider/AuthProvider";
 const Register = () => {
+  const authInfo = useContext(AuthContext);
+  const { createUser } = authInfo;
+
   const handleRegister = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
-    createUserWithEmailAndPassword(auth, email, password)
+
+    createUser(email, password)
       .then((result) => {
-        alert("Successfully Register");
-        updateProfile(result.user, name)
-          .then(() => {
-            console.log("Name added successfully");
-          })
-          .catch((error) => {
-            console.error(error.message);
-          });
+        console.log("Successfully Register", result.user);
       })
-      .catch((error) => alert(error.message));
+      .catch((error) => {
+        console.error(error.message);
+      });
   };
   return (
     <div className="hero min-h-screen bg-base-200">

@@ -1,11 +1,21 @@
-import auth from "../../firebase/firebase.config";
+import { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { AuthContext } from "../AuthProvider/AuthProvider";
 
 const Login = () => {
+  const { signInUser } = useContext(AuthContext);
   const handleLogin = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
+
+    signInUser(email, password)
+      .then((result) => {
+        console.log("Successfully logged in", result.user);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   };
 
   return (
