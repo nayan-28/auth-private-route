@@ -1,53 +1,13 @@
-import {
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
 import auth from "../../firebase/firebase.config";
 import { NavLink } from "react-router-dom";
-import { useRef, useState } from "react";
 
 const Login = () => {
-  const [loginSuccess, setLoginSuccess] = useState("");
-  const [loginError, setLoginError] = useState("");
-  const emailRef = useRef(null);
-  const [resetEmail, setResetEmail] = useState("");
-
   const handleLogin = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-
-    setLoginError("");
-    setLoginSuccess("");
-    setResetEmail("");
-
-    signInWithEmailAndPassword(auth, email, password)
-      .then((result) => {
-        if (result.user) {
-          setLoginSuccess("Successfully logged in");
-        }
-      })
-      .catch((error) => {
-        setLoginError(error.message);
-      });
   };
 
-  const handleForgetPassword = () => {
-    const email = emailRef.current.value;
-    if (!email) {
-      console.log("Please Write your email");
-      return;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      console.log("Please write your email correctly");
-      return;
-    } else {
-      sendPasswordResetEmail(auth, email)
-        .then(() => {
-          setResetEmail("Please Check your email");
-        })
-        .catch((error) => console.log(error));
-    }
-  };
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row-reverse">
@@ -80,10 +40,7 @@ const Login = () => {
                 name="password"
               />
               <label className="label">
-                <NavLink
-                  onClick={handleForgetPassword}
-                  className="label-text-alt link link-hover"
-                >
+                <NavLink to="/" className="label-text-alt link link-hover">
                   Forgot password?
                 </NavLink>
               </label>
@@ -92,11 +49,9 @@ const Login = () => {
               <button className="btn btn-primary">Login</button>
             </div>
           </form>
-          {loginSuccess && <p className="text-green-600">{loginSuccess}</p>}
-          {loginError && <p className="text-red-600">{loginError}</p>}
-          {resetEmail && <p className="text-green-600">{resetEmail}</p>}
+
           <p>
-            Don't have an account?
+            Don`t have an account?
             <button>
               <NavLink to="/register">Register Now</NavLink>
             </button>
